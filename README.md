@@ -1,6 +1,6 @@
 # Gallery Search React App
 
-Demo can be found here: [Gallery Search React](https://github.com/facebook/create-react-app).
+Demo can be found here: [Gallery Search React](https://beamish-travesseiro-07e952.netlify.app/).
 
 ## Create `.env` file
 Before running the code make sure to add the environment variables in `.env` file.
