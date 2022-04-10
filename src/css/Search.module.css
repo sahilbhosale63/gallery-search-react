@@ -1,5 +1,5 @@
 .main_container{
-    width: 100vw;
+    width: 100%;
     height: 50vh;
     display: flex;
     flex-direction: column;
@@ -14,7 +14,7 @@
 .site_title{
     margin-bottom: 1em;
     color: #fff;
-    font-size: 2.8em;
+    font-size: 2.2em;
 }
 
 .searchbar{
@@ -36,10 +36,14 @@
 .photo_grid{
     display: flex;
     flex-wrap: wrap;
-    padding: 5em;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 2em 0;
 }
 
 
-@media only screen and (min-width: 900px) {
-    
+@media only screen and (min-width: 600px) {
+    .site_title{
+        font-size: 2.8em;
+    }
 }

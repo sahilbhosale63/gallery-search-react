@@ -1,14 +1,31 @@
-import React, { useState } from 'react'
-import SinglePhoto from './SinglePhoto'
-import styles from '../css/Search.module.css'
+import React, { useContext, useEffect, useState } from 'react';
+import SinglePhoto from './SinglePhoto';
+import styles from '../css/Search.module.css';
+import PhotoResponseContext from '../context/PhotoResponseContext';
+const axios = require('axios');
 
 export default function Search() {
 
-    const axios = require('axios');
-    const [photoResponse, setPhotoResponse] = useState([]);
-    const [userSearchQuery, setUserSearchQuery] = useState("");
+    const photoResContext = useContext(PhotoResponseContext);
+    const [userSearchQuery, setUserSearchQuery] = useState("\"\"");
+    const url = `${process.env.REACT_APP_FLICKR_BASE_URL}method=${process.env.REACT_APP_FLICKR_API_METHOD}&api_key=${process.env.REACT_APP_FLICKR_API_KEY}&text=${userSearchQuery}&format=${process.env.REACT_APP_FLICKR_DATA_FORMAT}&per_page=${process.env.REACT_APP_FLICKR_RESULT_PER_PAGE}`;
+
+    useEffect(()=>{        
+        getData();
+    }, [userSearchQuery])
+
+    async function getData(){
+
+        await axios.get(url)
+            .then(async response =>{
+                const content = response.data;
+                photoResContext.setPhotoResponse(content.photos.photo);
+            })
+            .catch(error => console.log(error));
+    }
 
     const debounce = (func, delay) => {
+
         let debounceTimer;
         return function () {
             const context = this;
@@ -21,18 +38,8 @@ export default function Search() {
 
 
     const update = debounce(async function (e) {
-
-        setUserSearchQuery(e.target.value);
-
-        const url = `${process.env.REACT_APP_FLICKR_BASE_URL}method=${process.env.REACT_APP_FLICKR_API_METHOD}&api_key=${process.env.REACT_APP_FLICKR_API_KEY}&text=${userSearchQuery}&format=${process.env.REACT_APP_FLICKR_DATA_FORMAT}&per_page=${process.env.REACT_APP_FLICKR_RESULT_PER_PAGE}`;
-
-        await axios.get(url)
-            .then(async response =>{
-                const content = response.data;
-                console.log(content.photos.photo);
-                setPhotoResponse(content.photos.photo);
-            })
-            .catch(error => console.log(error));
+        (e.target.value === "")? setUserSearchQuery("\"\"") : setUserSearchQuery(e.target.value)
+        getData();
     }, 300);
 
   return (
@@ -44,11 +51,11 @@ export default function Search() {
                 type="text" 
                 placeholder='Search...' 
                 className={styles.searchbar}
-                onChange={(e)=>{ e.persist(); update(e);}} />
+                onChange={e => update(e)} />
         </div>
         <div className={styles.photo_grid}>{
-                (photoResponse !== undefined)?
-                    photoResponse.map(photo => (
+                (photoResContext.photoResponse !== undefined)?
+                    photoResContext.photoResponse.map(photo => (
                         <SinglePhoto key={photo.id} photoObj={photo} />
                     )) : ""
             }

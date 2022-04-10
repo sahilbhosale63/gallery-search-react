@@ -1,10 +1,13 @@
 import './App.css';
-import Search from './Components/Search';
+import Search from './components/Search';
+import PhotoResponseState from './context/PhotoResponseState';
 
 function App() {
   return (
     <div className="App">
-      <Search />
+      <PhotoResponseState>
+        <Search />
+      </PhotoResponseState>
     </div>
   );
 }
