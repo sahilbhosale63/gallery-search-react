@@ -12,8 +12,10 @@ export default function Search() {
 
     useEffect(()=>{        
         getData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userSearchQuery])
 
+    console.log("pppp")
     async function getData(){
 
         await axios.get(url)
